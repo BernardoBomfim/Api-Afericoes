@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-import application.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Map;
 
 @RestController
@@ -27,8 +25,8 @@ public class AuthController {
 
     @PostMapping
     @Operation(summary = "Autenticar usuário", description = "Autentica as credenciais e retorna um token JWT")
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Autenticação bem-sucedida", content = @Content(schema = @Schema(implementation = ApiResponse.class)))
-    public ResponseEntity<ApiResponse> login(@RequestBody Usuario usuario) {
+    @ApiResponse(responseCode = "200", description = "Autenticação bem-sucedida", content = @Content)
+    public ResponseEntity<application.dto.ApiResponse> login(@RequestBody Usuario usuario) {
         UsernamePasswordAuthenticationToken tk =
             new UsernamePasswordAuthenticationToken(
                 usuario.getNomeDeUsuario(), usuario.getSenha());
@@ -36,6 +34,6 @@ public class AuthController {
         
         String token = tokenService.generateToken(usuario);
         Map<String, String> data = Map.of("token", token);
-        return ResponseEntity.ok(ApiResponse.ok(data, "Autenticado"));
+        return ResponseEntity.ok(application.dto.ApiResponse.ok(data, "Autenticado"));
     }
 }
